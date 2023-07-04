@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {Layer, Stage} from "react-konva";
 import Title from "../title/Title";
 import PolyLine from "../polyline/PolyLine";
@@ -9,28 +9,30 @@ import Triangle from "../triangle/Triangle";
 import {Point} from "../../interfaces/Point.interfaces";
 import IsoscelesTriangle from "../triangle/IsoscelesTriangle";
 import Image from "../image/Image";
-import html2canvas from "html2canvas";
-import downloadjs from 'downloadjs';
+import download from 'downloadjs';
 
 const Canvas = () => {
-    const bodyElement = document.body;
-    const exportPNG = async () => {
-        const canvas = await html2canvas(bodyElement);
-        const dataURL = canvas.toDataURL('image/png');
-        downloadjs(dataURL, 'download.png', 'image/png');
+    const canvas = document.querySelector("canvas");
+    const exportPNG = () => {
+        if (canvas) {
+            const dataURL = canvas.toDataURL('image/png');
+            download(dataURL, 'canvas.png', 'image/png');
+        }
     };
 
-    const exportJPEG = async () => {
-        const canvas = await html2canvas(bodyElement);
-        const dataURL = canvas.toDataURL('image/jpeg');
-        downloadjs(dataURL, 'download.jpeg', 'image/jpeg');
+    const exportJPEG = () => {
+        if (canvas) {
+            const dataURL = canvas.toDataURL('image/jpeg');
+            download(dataURL, 'canvas.jpeg', 'image/jpeg');
+        }
     };
 
     //пока не воркает
-    const exportSVG = async () => {
-        const canvas = await html2canvas(bodyElement);
-        const svgData = canvas.toDataURL('image/svg+xml');
-        downloadjs(svgData, 'canvas_image.svg', 'image/svg+xml');
+    const exportSVG = () => {
+        if (canvas) {
+            const dataURL = canvas.toDataURL('image/svg+xml');
+            download(dataURL, 'canvas.svg', 'image/svg+xml');
+        }
     };
 
 
@@ -112,7 +114,6 @@ const Canvas = () => {
                         cellWidth={200}
                         parity={"odd"}
                     />
-
                     <Image
                         imageUrl={"logo512.png"}
                         x={100}
