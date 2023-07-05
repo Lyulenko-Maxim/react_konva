@@ -10,9 +10,15 @@ import {Point} from "../../interfaces/Point.interfaces";
 import IsoscelesTriangle from "../triangle/IsoscelesTriangle";
 import Image from "../image/Image";
 import download from 'downloadjs';
+import {toSvg} from "html-to-image";
 
 const Canvas = () => {
     const canvas = document.querySelector("canvas");
+
+    // if (canvas) {
+    //     canvas.style.backgroundColor = "white"
+    // }
+
     const exportPNG = () => {
         if (canvas) {
             const dataURL = canvas.toDataURL('image/png');
@@ -27,11 +33,12 @@ const Canvas = () => {
         }
     };
 
-    //пока не воркает
     const exportSVG = () => {
         if (canvas) {
-            const dataURL = canvas.toDataURL('image/svg+xml');
-            download(dataURL, 'canvas.svg', 'image/svg+xml');
+            toSvg(canvas)
+                .then((dataUrl) => {
+                    download(dataUrl, 'canvas.svg', 'image/svg+xml');
+                });
         }
     };
 
