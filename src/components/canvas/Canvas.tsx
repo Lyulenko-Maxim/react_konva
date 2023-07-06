@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useRef} from 'react';
+import Konva from "konva";
 import {Layer, Stage} from "react-konva";
 import Title from "../title/Title";
 import PolyLine from "../polyline/PolyLine";
@@ -13,35 +14,34 @@ import download from 'downloadjs';
 import {toSvg} from "html-to-image";
 
 const Canvas = () => {
-    const canvas = document.querySelector("canvas");
-
-    // if (canvas) {
-    //     canvas.style.backgroundColor = "white"
-    // }
+    const canvasRef = useRef<Konva.Layer>(null);
 
     const exportPNG = () => {
-        if (canvas) {
-            const dataURL = canvas.toDataURL('image/png');
+        if (canvasRef.current) {
+            const dataURL = canvasRef.current.toDataURL({
+                mimeType: 'image/png',
+            });
             download(dataURL, 'canvas.png', 'image/png');
         }
     };
 
     const exportJPEG = () => {
-        if (canvas) {
-            const dataURL = canvas.toDataURL('image/jpeg');
+        if (canvasRef.current) {
+            const dataURL = canvasRef.current.toDataURL({
+                mimeType: 'image/jpeg',
+            });
             download(dataURL, 'canvas.jpeg', 'image/jpeg');
         }
     };
 
     const exportSVG = () => {
-        if (canvas) {
-            toSvg(canvas)
+        if (canvasRef.current) {
+            toSvg(canvasRef.current.getCanvas()._canvas)
                 .then((dataUrl) => {
                     download(dataUrl, 'canvas.svg', 'image/svg+xml');
                 });
         }
     };
-
 
     const trianglePoints: Point[] = [
         {x: 100, y: 300},
@@ -59,8 +59,9 @@ const Canvas = () => {
             <button onClick={exportPNG}>to PNG</button>
             <button onClick={exportJPEG}>to JPEG</button>
             <button onClick={exportSVG}>to SVG</button>
+
             <Stage width={window.innerWidth} height={3000}>
-                <Layer>
+                <Layer ref={canvasRef}>
                     <Title
                         text="Заголовок"
                         x={100}
